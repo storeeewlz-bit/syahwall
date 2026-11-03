@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Untuk Kamu 🤍</title>
+<style>
+  body{font-family:sans-serif;background:#ffe6ea;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px}
+  .card{background:white;padding:28px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.1);width:100%;max-width:420px;text-align:center}
+  input,textarea{width:100%;padding:12px;border-radius:12px;border:2px solid #ffb6c1;outline:none;margin-top:8px;box-sizing:border-box;font-family:sans-serif}
+  button{width:100%;padding:13px;border-radius:12px;border:none;margin-top:12px;font-weight:bold;cursor:pointer}
+  .btn-utama{background:#ff4d6d;color:white} .btn-clue{background:#fff0f3;color:#ff4d6d;border:1px solid #ffb6c1}
+  #clueBox{display:none;text-align:left;margin-top:20px;background:#fff8f9;padding:18px;border-radius:18px}
+  .q{margin-bottom:16px} .q label{font-weight:bold;font-size:14px;color:#333}
+  .hidden{display:none}
+
+  /* Tampilan Kertas Surat */
+  .letter-paper {
+    background: #fffdf9;
+    border: 1px solid #f0e6d2;
+    border-left: 4px solid #ff4d6d;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+    text-align: left;
+    margin-top: 15px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #444;
+  }
+  .letter-paper h3 { margin-top: 0; color: #ff4d6d; text-align: center; }
+  .ans-box {
+    background: #fff0f3;
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="loginCard">
+  <h2>Hai Sayang 🤍</h2>
+  <p style="font-size:14px;color:#666">Masukin password rahasia dulu ya. Cuma kita yang tau!</p>
+  <input type="password" id="pwInput" placeholder="Password...">
+  <button class="btn-utama" onclick="cekPassword()">Masuk</button>
+  <button class="btn-clue" onclick="bukaClue()">🔍 Lupa Password? Klik Clue</button>
+  <p id="salah" style="color:red;font-size:13px;display:none;margin-top:10px">Salah, coba tanya clue dulu 😝</p>
+
+  <div id="clueBox">
+    <h3 style="text-align:center;margin-top:0">Jawab Dari Hati Ya 🥺</h3>
+    <div class="q"><label>1. Apa nama lengkap ku?</label><input id="ans0" placeholder="Tulis..."></div>
+    <div class="q"><label>2. Siapa nama adek paling kecilku?</label><input id="ans1" placeholder="Tulis..."></div>
+    <div class="q"><label>3. Apa game fav ku?</label><input id="ans2" placeholder="Tulis..."></div>
+    <div class="q"><label>4. Apa yang kamu suka dariku?</label><textarea id="ans3" rows="2" placeholder="Jawab jujur ya..."></textarea></div>
+    <div class="q"><label>5. Kenapa kamu cinta?</label><textarea id="ans4" rows="2" placeholder="Kenapa sih?"></textarea></div>
+    <button class="btn-utama" onclick="kirimClue()">Kirim Jawaban</button>
+    <p id="clueResult" style="font-size:13px;text-align:center;margin-top:12px"></p>
+  </div>
+</div>
+
+<div class="card hidden" id="success">
+  <h2>Untuk Kamu, Semenit & Selamanya 💌</h2>
+  
+  <!-- Kertas Surat Romantis -->
+  <div class="letter-paper">
+    <h3>Makasih Ya Sayang 🤍</h3>
+    <p>Halo sayangku,</p>
+    <p>Makasih banyak ya udah selalu ada, selalu sabar, dan setia menemani perjalanan kita sejauh ini. Aku bersyukur banget bisa punya kamu di hidupku.</p>
+    <p>Terima kasih udah memilih untuk bertahan, saling mengerti, dan terus berjuang bareng. Kebersamaan sama kamu itu salah satu hal paling berharga yang selalu ingin aku jaga.</p>
+    <p>Semoga kita bisa terus sama-sama, melewati setiap cerita, dan saling melengkapi sampai kapan pun. Aku sayang kamu banyak-banyak! 🥰✨</p>
+    
+    <hr style="border:none; border-top:1px dashed #ffb6c1; margin:15px 0;">
+    
+    <p style="font-size:13px; font-weight:bold; color:#ff4d6d; margin-bottom:5px;">Jawaban manis kamu tadi:</p>
+    <div class="ans-box" id="jawabanTampil"></div>
+  </div>
+
+  <!-- Tombol Kirim ke WhatsApp -->
+  <button class="btn-utama" onclick="kirimKeWA()" style="margin-top: 18px; background: #25D366;">✨ Udah dibaca, Love youu mass 🤍</button>
+</div>
+
+<script>
+// GANTI PASSWORD DISINI AJA MAS
+const PASSWORD_RAHASIA = "sayangku";
+
+// GANTI NOMOR WHATSAPP MAS DI SINI (Ganti angka 0 di depan dengan 62, contoh: 628123456789)
+const NOMOR_WHATSAPP = "628xxxxxxxxxx"; 
+
+function cekPassword(){
+  if(document.getElementById('pwInput').value.trim().toLowerCase() === PASSWORD_RAHASIA.toLowerCase()){
+    tampilkanAkhir();
+  } else {
+    document.getElementById('salah').style.display='block';
+  }
+}
+function bukaClue(){ document.getElementById('clueBox').style.display='block'; }
+
+function kirimClue(){
+  const a0 = document.getElementById('ans0').value.trim();
+  const a1 = document.getElementById('ans1').value.trim();
+  const a2 = document.getElementById('ans2').value.trim();
+  const a3 = document.getElementById('ans3').value.trim();
+  const a4 = document.getElementById('ans4').value.trim();
+  const res = document.getElementById('clueResult');
+
+  if(!a0 || !a1 || !a2 || !a3 || !a4){
+    res.style.color='red'; res.innerText='Isi semua dulu dong, jangan ada yang kosong 🥺'; return;
+  }
+
+  res.style.color='green';
+  res.innerHTML = `Makasih udah jawab jujur 🥰<br><br>Passwordnya adalah:<br><b style="font-size:22px;color:#ff4d6d">${PASSWORD_RAHASIA}</b><br><br>Masukan di atas ya!`;
+}
+
+function tampilkanAkhir(){
+  document.getElementById('loginCard').classList.add('hidden');
+  document.getElementById('success').classList.remove('hidden');
+  const tampil = `
+    <b>1. Nama lengkapku:</b> ${document.getElementById('ans0').value || '-'}<br>
+    <b>2. Adek kecilku:</b> ${document.getElementById('ans1').value || '-'}<br>
+    <b>3. Game fav:</b> ${document.getElementById('ans2').value || '-'}<br>
+    <b>4. Yang disuka:</b> ${document.getElementById('ans3').value || '-'}<br>
+    <b>5. Kenapa cinta:</b> ${document.getElementById('ans4').value || '-'}
+  `;
+  document.getElementById('jawabanTampil').innerHTML = tampil;
+}
+
+function kirimKeWA(){
+  const pesan = "Udah dibaca ya mass, love youu mass 🤍🥰";
+  const urlWA = `https://api.whatsapp.com/send?phone=${6285166493549}&text=${encodeURIComponent(pesan)}`;
+  window.open(urlWA, '_blank');
+}
+</script>
+</body>
+</html>
